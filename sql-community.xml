@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.onshuu.www.community.mapper.CommuMapper">
+
+	<select id="selectCommuQnaList" resultType="com.onshuu.www.community.dto.CommuDto">
+		<![CDATA[
+			SELECT
+				qna_num,
+				qna_title,
+				qna_nick,
+				qna_hitCnt,
+				DATE_FORMAT(qna_created_datetime, '%Y.%m.%d %H:%i:%s') AS qna_created_datetime
+			FROM
+				shucommu_qna
+			WHERE
+				qna_deleted_yn = 'N'
+			ORDER BY qna_num DESC
+		]]>
+	</select>
+
+
+	<insert id="insertCommuQna" parameterType="com.onshuu.www.community.dto.CommuDto" useGeneratedKeys="true" keyProperty="qna_num">
+		<![CDATA[
+			INSERT INTO shucommu_qna
+			(
+				qna_nick,
+				qna_title,
+				qna_input,
+				qna_created_datetime
+			)
+			VALUES
+			(
+				#{qna_nick},
+				#{qna_title},
+				#{qna_input},
+				NOW()
+			)
+		]]>
+	</insert>
+
+	<select id="selectCommuQnaDetail" parameterType="int" resultType="com.onshuu.www.community.dto.CommuDto">
+		<![CDATA[
+			SELECT
+				qna_num,
+				qna_nick,
+				qna_title,
+				qna_input,
+				qna_hitCnt,
+				DATE_FORMAT(qna_created_datetime, '%Y.%m.%d %H:%i:%s') AS qna_created_datetime
+
+			FROM
+				shucommu_qna
+			WHERE
+				qna_num = #{qna_num}
+				AND qna_deleted_yn = 'N'
+		]]>
+	</select>
+
+
+	<update id="updateCommuQnaHitCount" parameterType="int">
+		<![CDATA[
+			UPDATE
+				shucommu_qna
+			SET
+				qna_hitCnt = qna_hitCnt + 1
+			WHERE
+				qna_num = #{qna_num}
+		]]>
+	</update>
+
+	<update id="updateCommuQna" parameterType="com.onshuu.www.community.dto.CommuDto">
+		<![CDATA[
+			UPDATE shucommu_qna SET
+				qna_title = #{qna_title},
+				qna_input = #{qna_input},
+				qna_updated_datetime = Now(),
+				qna_updater_nick = #{qna_updater_nick}
+			WHERE
+				qna_num = #{qna_num}
+		]]>
+	</update>
+
+<!--    <update id="deleteCommuQna" parameterType="int">-->
+<!--		<![CDATA[-->
+<!--			UPDATE shucommu_qna SET-->
+<!--				qna_deleted_yn = 'Y',-->
+<!--				qna_updated_datetime = Now(),-->
+<!--				qna_updater_nick = #{nickname}-->
+<!--			WHERE-->
+<!--				qna_num = #{qna_num}-->
+<!--		]]>-->
+<!--	</update>-->
+</mapper>
+
+
+<!--
+<mapper namespace="com.onshuu.www.community.mapper.CommuMapper">
+<select id="selectCommuFreeList" resultType="com.onshuu.www.community.dto.CommuDto">
+		<![CDATA[
+			SELECT
+				free_num,
+				free_title,
+				free_nick,
+				free_hitCnt,
+				DATE_FORMAT(free_created_datetime, '%Y.%m.%d %H:%i:%s') AS free_created_datetime
+			FROM
+				shucommu_free
+			WHERE
+				deleted_yn = 'N'
+			ORDER BY free_num DESC
+		]]>
+	</select>
+
+<insert id="insertCommuFree" parameterType="com.onshuu.www.community.dto.CommuDto" useGeneratedKeys="true" keyProperty="free_num">
+		<![CDATA[
+			INSERT INTO shucommu_free
+			(
+				free_title,
+				free_input,
+				free_created_datetime,
+				free_nick
+			)
+			VALUES
+			(
+				#{title},
+				#{contents},
+				NOW(),
+				#{nickname}
+			)
+		]]>
+	</insert>
+
+<select id="selectCommuFreeDetail" parameterType="int" resultType="com.onshuu.www.community.dto.CommuDto">
+		<![CDATA[
+			SELECT
+				free_num,
+				free_creator_nick,
+				free_title,
+				free_input,
+				free_hitCnt,
+				DATE_FORMAT(free_created_datetime, '%Y.%m.%d %H:%i:%s') AS free_created_datetime
+
+			FROM
+				shucommu_free
+			WHERE
+				free_num = #{free_num}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
+
+<update id="updateHitCount" parameterType="int">
+		<![CDATA[
+			UPDATE
+				shucommu_free
+			SET
+				free_hitCnt = free_hitCnt + 1
+			WHERE
+				free_num = #{free_num}
+		]]>
+	</update>
+
+<update id="updateCommu" parameterType="com.onshuu.www.community.dto.CommuDto">
+		<![CDATA[
+			UPDATE shucommu_free SET
+				qna_title = #{title},
+				qna_input = #{contents},
+				qna_updated_datetime = Now(),
+				qna_updater_nick = 'admin'
+			WHERE
+				qna_num = #{qna_num}
+		]]>
+	</update>
+
+<update id="deleteCommu" parameterType="int">
+		<![CDATA[
+			UPDATE shucommu_free SET
+				qna_deleted_yn = 'Y',
+				qna_updated_datetime = Now(),
+				qna_updater_nick = #{nickname}
+			WHERE
+				qna_num = #{qna_num}
+		]]>
+	</update>
+</mapper>-->
